@@ -1,0 +1,48 @@
+/**
+ * Anime Next - Content Styles
+ * 視覺回饋樣式
+ *
+ * @version 1.0.0
+ */
+
+/* 按鈕點擊動畫 - 擴散效果 */
+@keyframes anime-next-highlight {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* 按鈕點擊動畫 - 脈衝效果 */
+@keyframes anime-next-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* 按鈕點擊時套用的 class */
+.anime-next-clicked {
+  animation: anime-next-highlight 0.6s ease-out, anime-next-pulse 0.3s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+/* 可選：為所有分頁按鈕添加過渡效果 */
+.paginate_button,
+a[data-dt-idx],
+a[aria-controls] {
+  transition: all 0.2s ease;
+}
+
+/*
+ * 注意：這些樣式會套用到所有網頁
+ * 使用特定的 class 名稱避免與網頁原有樣式衝突
+ */

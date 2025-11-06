@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Href 連結掃描測試頁面</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #f5576c;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #999;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+
+    .page-info {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+    }
+
+    .page-number {
+      font-size: 5em;
+      font-weight: bold;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .page-label {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    .instructions {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .instructions h3 {
+      color: #856404;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instructions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .instructions li {
+      padding: 10px 0;
+      color: #856404;
+      line-height: 1.6;
+    }
+
+    .instructions li:before {
+      content: "👉 ";
+      margin-right: 8px;
+    }
+
+    .pagination-links {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .pagination-links h3 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .link-list {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .page-link {
+      display: inline-block;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .page-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .page-link.current {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      cursor: default;
+      transform: scale(1.1);
+    }
+
+    .keyboard-shortcuts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .shortcut-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .shortcut-card:hover {
+      border-color: #f5576c;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(245, 87, 108, 0.2);
+    }
+
+    .shortcut-key {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .shortcut-label {
+      color: #555;
+      font-weight: 600;
+    }
+
+    .features {
+      background: #e7f3ff;
+      border: 2px solid #f5576c;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .features h3 {
+      color: #f5576c;
+      margin-bottom: 15px;
+    }
+
+    .features ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .features li {
+      padding: 8px 0;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .features li:before {
+      content: "✓ ";
+      color: #4caf50;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .info-box {
+      background: #d1ecf1;
+      border: 2px solid #0c5460;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .info-box h3 {
+      color: #0c5460;
+      margin-bottom: 15px;
+    }
+
+    .info-box p {
+      color: #0c5460;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+      color: #999;
+      font-size: 0.9em;
+    }
+
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9em;
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Href 連結掃描測試</h1>
+    <p class="subtitle">測試 Anime Next 的智能連結掃描功能</p>
+
+    <!-- 頁面資訊 -->
+    <div class="page-info">
+      <div class="page-number" id="page-number">3</div>
+      <div class="page-label">當前頁面</div>
+    </div>
+
+    <!-- 使用說明 -->
+    <div class="instructions">
+      <h3>📖 使用說明</h3>
+      <ul>
+        <li>這個頁面<strong>沒有實際的分頁按鈕</strong></li>
+        <li>當前 URL <strong>沒有 page 參數</strong>（例如不是 ?page=3）</li>
+        <li>但頁面中包含多個指向不同頁碼的連結</li>
+        <li>使用鍵盤左右方向鍵 (← →) 來測試智能掃描功能</li>
+        <li>擴充功能會自動掃描頁面中的連結並導航到相應頁面</li>
+      </ul>
+    </div>
+
+    <!-- 分頁連結 -->
+    <div class="pagination-links">
+      <h3>📑 頁面連結（模擬實際網站的分頁連結）</h3>
+      <div class="link-list">
+        <a href="?page=1" class="page-link">第 1 頁</a>
+        <a href="?page=2" class="page-link">第 2 頁</a>
+        <a href="?page=3" class="page-link current">第 3 頁（目前）</a>
+        <a href="?page=4" class="page-link">第 4 頁</a>
+        <a href="?page=5" class="page-link">第 5 頁</a>
+        <a href="?page=6" class="page-link">第 6 頁</a>
+      </div>
+    </div>
+
+    <!-- 資訊框 -->
+    <div class="info-box">
+      <h3>🤖 智能掃描的工作原理</h3>
+      <p>
+        <strong>步驟 1:</strong> 當你按下方向鍵時，擴充功能首先嘗試尋找實際的按鈕
+      </p>
+      <p>
+        <strong>步驟 2:</strong> 如果找不到按鈕，嘗試使用 URL 參數導航
+      </p>
+      <p>
+        <strong>步驟 3:</strong> 如果 URL 中沒有參數，就掃描頁面中所有的 &lt;a&gt; 標籤
+      </p>
+      <p>
+        <strong>步驟 4:</strong> 提取包含 page 參數的連結，並找到目標頁碼的 URL
+      </p>
+      <p>
+        <strong>步驟 5:</strong> 自動導航到該 URL
+      </p>
+    </div>
+
+    <!-- 鍵盤快捷鍵 -->
+    <div class="keyboard-shortcuts">
+      <div class="shortcut-card">
+        <div class="shortcut-key">←</div>
+        <div class="shortcut-label">上一頁 (第 2 頁)</div>
+      </div>
+      <div class="shortcut-card">
+        <div class="shortcut-key">→</div>
+        <div class="shortcut-label">下一頁 (第 4 頁)</div>
+      </div>
+    </div>
+
+    <!-- 功能特色 -->
+    <div class="features">
+      <h3>✨ 智能連結掃描特色</h3>
+      <ul>
+        <li>自動掃描頁面中所有包含 page 參數的連結</li>
+        <li>智能推斷當前頁碼（從 URL 或連結中）</li>
+        <li>支援相對路徑和絕對路徑的連結</li>
+        <li>作為最後的備用方案，確保導航功能始終可用</li>
+        <li>可以在擴充功能設定中開關此功能</li>
+        <li>自動記錄掃描過程到控制台（F12 查看）</li>
+      </ul>
+    </div>
+
+    <!-- 控制台日誌示例 -->
+    <div class="info-box">
+      <h3>🔍 控制台日誌範例</h3>
+      <p>按下 F12 開啟開發者工具，你會看到類似以下的日誌：</p>
+      <div class="code-block">
+[Anime Next] 找不到下一頁按鈕
+[Anime Next] 嘗試使用 URL 參數導航到下一頁
+[Anime Next] URL 中沒有找到頁碼參數
+[Anime Next] 嘗試掃描 href 連結到下一頁
+[Anime Next] 掃描到 6 個包含頁碼的連結
+[Anime Next] 推斷當前頁碼為: 3
+[Anime Next] 找到第 4 頁的連結: ?page=4
+[Anime Next] 導航到下一頁: ?page=4
+      </div>
+    </div>
+
+    <div class="footer">
+      Anime Next - Href 連結掃描測試頁面 v1.0.0
+    </div>
+  </div>
+
+  <script>
+    // 獲取當前頁碼
+    function getCurrentPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const page = urlParams.get('page');
+      return page ? parseInt(page, 10) : 3; // 預設為第 3 頁
+    }
+
+    // 更新頁面顯示
+    function updateDisplay() {
+      const currentPage = getCurrentPage();
+      document.getElementById('page-number').textContent = currentPage;
+
+      // 更新當前頁面連結的樣式
+      const links = document.querySelectorAll('.page-link');
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+        const pageNum = parseInt(new URLSearchParams(href.split('?')[1]).get('page'), 10);
+
+        if (pageNum === currentPage) {
+          link.classList.add('current');
+          link.textContent = `第 ${pageNum} 頁（目前）`;
+        } else {
+          link.classList.remove('current');
+          link.textContent = `第 ${pageNum} 頁`;
+        }
+      });
+
+      // 更新鍵盤快捷鍵說明
+      const shortcuts = document.querySelectorAll('.shortcut-label');
+      shortcuts[0].textContent = currentPage > 1 ? `上一頁 (第 ${currentPage - 1} 頁)` : '上一頁（已是第一頁）';
+      shortcuts[1].textContent = `下一頁 (第 ${currentPage + 1} 頁)`;
+    }
+
+    // 初始化
+    updateDisplay();
+
+    // 監聽瀏覽器前進/後退
+    window.addEventListener('popstate', updateDisplay);
+  </script>
+</body>
+</html>

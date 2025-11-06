@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Next 設定</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 5px;
+      color: #667eea;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .version {
+      font-size: 0.8em;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    .setting-item {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .setting-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .setting-title {
+      font-weight: 600;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .setting-description {
+      font-size: 0.9em;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* 開關切換按鈕樣式 */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 26px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #667eea;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+
+    /* 狀態指示器 */
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.active {
+      background-color: #4caf50;
+    }
+
+    .status-dot.inactive {
+      background-color: #f44336;
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .status-text {
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    /* 按鈕樣式 */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    /* 鍵盤快捷鍵顯示 */
+    .keyboard-shortcuts {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .shortcut-title {
+      font-size: 0.85em;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .shortcut-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 0.85em;
+    }
+
+    .shortcut-key {
+      display: inline-block;
+      padding: 3px 8px;
+      background: #333;
+      color: white;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.85em;
+    }
+
+    /* 自訂 ID 設定區域 */
+    .custom-ids-section {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .custom-ids-section label {
+      display: block;
+      font-size: 0.85em;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 5px;
+      margin-top: 10px;
+    }
+
+    .custom-ids-section label:first-of-type {
+      margin-top: 0;
+    }
+
+    .custom-ids-section textarea {
+      width: 100%;
+      min-height: 60px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.85em;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+
+    .custom-ids-section textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .custom-ids-section .hint {
+      font-size: 0.75em;
+      color: #999;
+      margin-top: 3px;
+      display: block;
+    }
+
+    .save-custom-ids-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 8px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.85em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .save-custom-ids-btn:hover {
+      background: #5568d3;
+    }
+
+    /* 連結樣式 */
+    .footer {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-size: 0.85em;
+      transition: color 0.3s;
+    }
+
+    .footer a:hover {
+      color: #5568d3;
+      text-decoration: underline;
+    }
+
+    /* 通知訊息 */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      background: #4caf50;
+      color: white;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 0.3s;
+      font-size: 0.9em;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span>🎮</span>
+      Anime Next
+    </h1>
+    <p class="version">版本 1.0.0</p>
+
+    <!-- 狀態指示 -->
+    <div class="status">
+      <div class="status-dot active" id="status-dot"></div>
+      <span class="status-text" id="status-text">擴充功能已啟用</span>
+    </div>
+
+    <!-- 主要設定 -->
+    <div class="setting-item">
+      <div class="setting-header">
+        <span class="setting-title">啟用鍵盤導航</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="enable-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <p class="setting-description">
+        使用鍵盤左右方向鍵控制網頁分頁導航
+      </p>
+    </div>
+
+    <!-- 視覺回饋設定 -->
+    <div class="setting-item">
+      <div class="setting-header">
+        <span class="setting-title">視覺回饋效果</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="visual-feedback-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <p class="setting-description">
+        按鈕被點擊時顯示動畫效果
+      </p>
+    </div>
+
+    <!-- URL 參數導航設定 -->
+    <div class="setting-item">
+      <div class="setting-header">
+        <span class="setting-title">URL 參數導航</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="url-navigation-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <p class="setting-description">
+        當頁面沒有實際按鈕時，自動使用 URL 參數導航（如 ?page=3）
+      </p>
+
+      <div class="custom-ids-section">
+        <label for="url-param-name">
+          URL 參數名稱
+        </label>
+        <input
+          type="text"
+          id="url-param-name"
+          placeholder="page"
+          value="page"
+          style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85em;"
+        />
+        <span class="hint">預設為 "page"，支援如 ?page=3 的 URL</span>
+      </div>
+    </div>
+
+    <!-- Href 連結掃描設定 -->
+    <div class="setting-item">
+      <div class="setting-header">
+        <span class="setting-title">智能連結掃描</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="href-scan-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <p class="setting-description">
+        當按鈕和 URL 參數都不可用時，自動掃描頁面中的分頁連結
+      </p>
+    </div>
+
+    <!-- Load More 按鈕檢測設定 -->
+    <div class="setting-item">
+      <div class="setting-header">
+        <span class="setting-title">Load More 檢測</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="load-more-toggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <p class="setting-description">
+        自動檢測並點擊「載入更多」按鈕（支援無限滾動類型網站）
+      </p>
+    </div>
+
+    <!-- 自訂按鈕 ID 設定 -->
+    <div class="setting-item">
+      <div class="setting-header">
+        <span class="setting-title">自訂按鈕 ID</span>
+      </div>
+      <p class="setting-description">
+        擴充更多網站的按鈕 ID 支援（每行一個 ID）
+      </p>
+
+      <div class="custom-ids-section">
+        <label for="custom-next-ids">
+          下一頁按鈕 ID
+        </label>
+        <textarea
+          id="custom-next-ids"
+          placeholder="例如：&#10;my-next-button&#10;next-page-btn&#10;pagination-next"
+        ></textarea>
+        <span class="hint">預設已包含：table-list_next</span>
+
+        <label for="custom-prev-ids">
+          上一頁按鈕 ID
+        </label>
+        <textarea
+          id="custom-prev-ids"
+          placeholder="例如：&#10;my-prev-button&#10;prev-page-btn&#10;pagination-prev"
+        ></textarea>
+        <span class="hint">預設已包含：table-list_previous</span>
+
+        <button class="save-custom-ids-btn" id="save-custom-ids-btn">
+          💾 儲存自訂 ID
+        </button>
+      </div>
+    </div>
+
+    <!-- 鍵盤快捷鍵說明 -->
+    <div class="keyboard-shortcuts">
+      <div class="shortcut-title">鍵盤快捷鍵</div>
+      <div class="shortcut-item">
+        <span>上一頁</span>
+        <span class="shortcut-key">←</span>
+      </div>
+      <div class="shortcut-item">
+        <span>下一頁</span>
+        <span class="shortcut-key">→</span>
+      </div>
+    </div>
+
+    <!-- 按鈕群組 -->
+    <div class="button-group">
+      <button class="btn-secondary" id="reset-btn">重置設定</button>
+      <button class="btn-primary" id="test-btn">測試頁面</button>
+    </div>
+
+    <!-- 頁尾 -->
+    <div class="footer">
+      <a href="#" id="help-link">使用說明</a> •
+      <a href="#" id="feedback-link">回報問題</a>
+    </div>
+  </div>
+
+  <!-- 通知訊息 -->
+  <div class="notification" id="notification"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

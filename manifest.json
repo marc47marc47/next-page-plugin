@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Anime Next - 鍵盤導航",
+  "version": "1.0.0",
+  "description": "使用鍵盤左右鍵控制網頁上一頁/下一頁",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Anime Next 設定"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/next-prev.ico",
+    "48": "icons/next-prev.ico",
+    "128": "icons/next-prev.ico"
+  }
+}

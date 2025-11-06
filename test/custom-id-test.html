@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自訂 ID 測試頁面 - Anime Next</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .section {
+      margin-bottom: 40px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .section h2 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .instruction {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .instruction h3 {
+      color: #856404;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    .instruction ol {
+      margin-left: 20px;
+      color: #856404;
+    }
+
+    .instruction li {
+      margin-bottom: 8px;
+    }
+
+    .code {
+      background: #333;
+      color: #0f0;
+      padding: 10px 15px;
+      border-radius: 4px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9em;
+      margin: 10px 0;
+      display: inline-block;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 10px 20px;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 6px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: #ccc;
+      color: #ccc;
+    }
+
+    .page-info {
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #667eea;
+      margin: 20px 0;
+    }
+
+    .content-box {
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      margin-top: 15px;
+      min-height: 150px;
+      border: 2px dashed #ddd;
+    }
+
+    .content-box h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .content-box p {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .status {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .example-box {
+      background: #e7f3ff;
+      border: 2px solid #2196f3;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+
+    .example-box h4 {
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+
+    .example-box pre {
+      background: #263238;
+      color: #aed581;
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.85em;
+    }
+
+    .highlight {
+      background: #ffeb3b;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span>🧪</span>
+      自訂 ID 測試頁面
+    </h1>
+    <p class="description">
+      這個頁面使用 <span class="highlight">自訂的按鈕 ID</span> 來測試擴充功能的自訂 ID 功能。
+      按鈕 ID 不是預設的 <code class="code">table-list_next</code>，而是使用自訂的 ID。
+    </p>
+
+    <!-- 測試說明 -->
+    <div class="section">
+      <h2>📋 測試步驟</h2>
+      <div class="instruction">
+        <h3>步驟 1: 設定自訂 ID</h3>
+        <ol>
+          <li>點擊瀏覽器工具列的擴充功能圖示</li>
+          <li>找到「自訂按鈕 ID」區域</li>
+          <li>在「下一頁按鈕 ID」欄位中輸入：<code class="code">my-next-button</code></li>
+          <li>在「上一頁按鈕 ID」欄位中輸入：<code class="code">my-prev-button</code></li>
+          <li>點擊「💾 儲存自訂 ID」按鈕</li>
+        </ol>
+      </div>
+
+      <div class="instruction">
+        <h3>步驟 2: 重新載入頁面</h3>
+        <ol>
+          <li>按下 F5 或點擊瀏覽器的重新整理按鈕</li>
+          <li>等待頁面完全載入</li>
+        </ol>
+      </div>
+
+      <div class="instruction">
+        <h3>步驟 3: 測試鍵盤導航</h3>
+        <ol>
+          <li>確保焦點不在任何輸入框中（點擊頁面空白處）</li>
+          <li>按下鍵盤的 <span class="highlight">→ 右方向鍵</span> → 應該切換到下一頁</li>
+          <li>按下鍵盤的 <span class="highlight">← 左方向鍵</span> → 應該切換到上一頁</li>
+          <li>觀察按鈕是否有視覺回饋效果（光暈動畫）</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 當前頁面資訊 -->
+    <div class="section">
+      <h2>📄 分頁內容</h2>
+      <div class="page-info">
+        目前在第 <span id="current-page">1</span> 頁（共 5 頁）
+      </div>
+
+      <div class="content-box">
+        <h3 id="content-title">第 1 頁的內容</h3>
+        <p id="content-text">
+          這是第 1 頁的測試內容。這個頁面使用自訂的按鈕 ID 來測試擴充功能。
+          請確認您已經在擴充功能設定中加入了自訂的按鈕 ID。
+        </p>
+      </div>
+
+      <!-- 分頁按鈕（使用自訂 ID） -->
+      <div class="pagination">
+        <button id="my-prev-button" disabled>⬅️ 上一頁</button>
+        <button id="my-next-button">下一頁 ➡️</button>
+      </div>
+
+      <div class="status">
+        ✅ 如果鍵盤方向鍵可以切換分頁，表示自訂 ID 功能運作正常！
+      </div>
+    </div>
+
+    <!-- 按鈕 ID 說明 -->
+    <div class="section">
+      <h2>🔍 這個頁面的按鈕 ID</h2>
+      <div class="example-box">
+        <h4>上一頁按鈕：</h4>
+        <pre>&lt;button id="my-prev-button"&gt;⬅️ 上一頁&lt;/button&gt;</pre>
+      </div>
+
+      <div class="example-box">
+        <h4>下一頁按鈕：</h4>
+        <pre>&lt;button id="my-next-button"&gt;下一頁 ➡️&lt;/button&gt;</pre>
+      </div>
+
+      <p style="margin-top: 15px; color: #666;">
+        這些 ID 與預設的 <code class="code">table-list_next</code> 和
+        <code class="code">table-list_previous</code> 不同，
+        因此必須在擴充功能設定中加入這些自訂 ID 才能使用鍵盤導航功能。
+      </p>
+    </div>
+
+    <!-- 除錯資訊 -->
+    <div class="section">
+      <h2>🐛 除錯資訊</h2>
+      <p style="color: #666; margin-bottom: 10px;">
+        按下 <span class="highlight">F12</span> 開啟開發者工具，切換到 Console 分頁，
+        您應該會看到以下訊息（如果自訂 ID 設定正確）：
+      </p>
+      <div class="example-box">
+        <pre>[Anime Next] 開始初始化...
+[Anime Next] 設定已載入: {enabled: true, visualFeedback: true, customNextIds: Array(1), customPrevIds: Array(1)}
+[Anime Next] 找到按鈕 (自訂 ID): next - my-next-button
+[Anime Next] 找到按鈕 (自訂 ID): previous - my-prev-button
+[Anime Next] 按鈕快取已更新 {hasNext: true, hasPrevious: true}</pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模擬分頁邏輯
+    let currentPage = 1;
+    const totalPages = 5;
+
+    const pageContents = [
+      {
+        title: "第 1 頁的內容",
+        text: "這是第 1 頁的測試內容。這個頁面使用自訂的按鈕 ID 來測試擴充功能。請確認您已經在擴充功能設定中加入了自訂的按鈕 ID。"
+      },
+      {
+        title: "第 2 頁的內容",
+        text: "這是第 2 頁。如果您能看到這個頁面，表示「下一頁」功能正常運作！試試看按下左方向鍵回到上一頁。"
+      },
+      {
+        title: "第 3 頁的內容",
+        text: "這是第 3 頁。您已經成功測試了自訂 ID 功能！繼續使用方向鍵來切換頁面吧。"
+      },
+      {
+        title: "第 4 頁的內容",
+        text: "這是第 4 頁。幾乎要到最後一頁了。自訂 ID 功能讓您可以在任何網站上使用鍵盤導航，只要知道按鈕的 ID。"
+      },
+      {
+        title: "第 5 頁的內容",
+        text: "這是最後一頁（第 5 頁）。恭喜您完成測試！您可以使用左方向鍵回到前面的頁面。"
+      }
+    ];
+
+    function updatePage() {
+      // 更新頁面資訊
+      document.getElementById('current-page').textContent = currentPage;
+      document.getElementById('content-title').textContent = pageContents[currentPage - 1].title;
+      document.getElementById('content-text').textContent = pageContents[currentPage - 1].text;
+
+      // 更新按鈕狀態
+      const prevBtn = document.getElementById('my-prev-button');
+      const nextBtn = document.getElementById('my-next-button');
+
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+
+      console.log(`[測試頁面] 當前頁面: ${currentPage}/${totalPages}`);
+    }
+
+    function goToNextPage() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePage();
+        console.log('[測試頁面] 切換到下一頁');
+      }
+    }
+
+    function goToPreviousPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePage();
+        console.log('[測試頁面] 切換到上一頁');
+      }
+    }
+
+    // 綁定按鈕事件
+    document.getElementById('my-next-button').addEventListener('click', goToNextPage);
+    document.getElementById('my-prev-button').addEventListener('click', goToPreviousPage);
+
+    // 初始化
+    updatePage();
+    console.log('[測試頁面] 自訂 ID 測試頁面已載入');
+    console.log('[測試頁面] 按鈕 ID: my-next-button, my-prev-button');
+  </script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Next - 測試頁面</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+
+    .instructions {
+      background: #f0f7ff;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 4px;
+    }
+
+    .instructions h2 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+
+    .instructions ul {
+      margin-left: 20px;
+    }
+
+    .instructions li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .test-section {
+      margin-bottom: 40px;
+    }
+
+    .test-section h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    /* 分頁按鈕樣式 */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .paginate_button {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .paginate_button:hover:not(.disabled) {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .paginate_button.disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .page-info {
+      font-size: 1.1em;
+      color: #333;
+      font-weight: 600;
+    }
+
+    /* 輸入框測試區域 */
+    .input-test {
+      margin-top: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .editable-div {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      background: white;
+    }
+
+    .editable-div:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    /* 內容區域 */
+    .content-area {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .content-area h4 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .content-area p {
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    /* 狀態指示器 */
+    .status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .status.active {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status.disabled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* 鍵盤提示 */
+    .keyboard-hint {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #333;
+      color: white;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+      margin: 0 4px;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .alert-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 Anime Next 測試頁面</h1>
+    <p class="subtitle">測試鍵盤導航擴充功能</p>
+
+    <div class="instructions">
+      <h2>📖 測試說明</h2>
+      <ul>
+        <li>按下 <span class="keyboard-hint">←</span> (左方向鍵) 切換到上一頁</li>
+        <li>按下 <span class="keyboard-hint">→</span> (右方向鍵) 切換到下一頁</li>
+        <li>在輸入框中按方向鍵時，應該不會觸發分頁切換</li>
+        <li>當按鈕停用時，應該無法點擊</li>
+        <li>開啟 Console (F12) 查看除錯日誌</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-info">
+      <strong>提示：</strong> 確保擴充功能已在 Chrome 中載入並啟用。前往 <code>chrome://extensions/</code> 檢查。
+    </div>
+
+    <!-- 分頁控制 -->
+    <div class="test-section">
+      <h3>🔄 分頁控制測試</h3>
+
+      <div class="content-area">
+        <h4>第 <span id="current-page">1</span> 頁 / 共 5 頁</h4>
+        <p id="page-content">這是第 1 頁的內容。使用鍵盤左右鍵來切換頁面！</p>
+      </div>
+
+      <div class="pagination">
+        <a class="paginate_button previous disabled"
+           aria-controls="table-list"
+           data-dt-idx="previous"
+           tabindex="0"
+           id="table-list_previous">
+          ← 上一頁
+        </a>
+
+        <span class="page-info">
+          頁碼：<strong id="page-number">1</strong>
+        </span>
+
+        <a class="paginate_button next"
+           aria-controls="table-list"
+           data-dt-idx="next"
+           tabindex="0"
+           id="table-list_next">
+          下一頁 →
+        </a>
+      </div>
+
+      <div class="alert alert-success" id="action-log">
+        <strong>操作日誌：</strong> <span id="log-content">等待操作...</span>
+      </div>
+    </div>
+
+    <!-- 輸入框測試 -->
+    <div class="test-section">
+      <h3>⌨️ 輸入框排除測試</h3>
+      <p>在以下輸入框中按左右方向鍵，應該不會觸發分頁切換：</p>
+
+      <div class="input-test">
+        <div class="form-group">
+          <label>文字輸入框 <span class="status active">應排除</span></label>
+          <input type="text" placeholder="在這裡按左右鍵應該可以移動游標，而不是切換頁面">
+        </div>
+
+        <div class="form-group">
+          <label>文字區域 <span class="status active">應排除</span></label>
+          <textarea placeholder="在這裡按左右鍵應該可以移動游標"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>下拉選單 <span class="status active">應排除</span></label>
+          <select>
+            <option>選項 1</option>
+            <option>選項 2</option>
+            <option>選項 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>可編輯 DIV (contenteditable) <span class="status active">應排除</span></label>
+          <div class="editable-div" contenteditable="true">
+            這是可編輯的內容。在這裡按左右鍵應該可以移動游標。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 一般區域測試 -->
+    <div class="test-section">
+      <h3>✨ 一般區域測試</h3>
+      <p>點擊下方區域（確保焦點不在輸入框中），然後按左右方向鍵：</p>
+
+      <div class="content-area" style="cursor: pointer;">
+        <h4>可點擊區域</h4>
+        <p>點擊這個區域，然後按左右方向鍵應該可以切換頁面。</p>
+        <p>這是正常的測試區域，用來驗證在非輸入元素上按鍵是否能正常觸發分頁切換。</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模擬分頁功能
+    let currentPage = 1;
+    const totalPages = 5;
+
+    const pageContents = [
+      "這是第 1 頁的內容。使用鍵盤左右鍵來切換頁面！",
+      "這是第 2 頁的內容。擴充功能運作正常！",
+      "這是第 3 頁的內容。繼續測試中間頁面的導航。",
+      "這是第 4 頁的內容。快到最後一頁了！",
+      "這是第 5 頁的內容。這是最後一頁。"
+    ];
+
+    function updatePage() {
+      // 更新頁面內容
+      document.getElementById('current-page').textContent = currentPage;
+      document.getElementById('page-number').textContent = currentPage;
+      document.getElementById('page-content').textContent = pageContents[currentPage - 1];
+
+      // 更新按鈕狀態
+      const prevButton = document.getElementById('table-list_previous');
+      const nextButton = document.getElementById('table-list_next');
+
+      // 上一頁按鈕
+      if (currentPage === 1) {
+        prevButton.classList.add('disabled');
+      } else {
+        prevButton.classList.remove('disabled');
+      }
+
+      // 下一頁按鈕
+      if (currentPage === totalPages) {
+        nextButton.classList.add('disabled');
+      } else {
+        nextButton.classList.remove('disabled');
+      }
+
+      // 更新操作日誌
+      const now = new Date().toLocaleTimeString('zh-TW');
+      document.getElementById('log-content').textContent =
+        `[${now}] 已切換到第 ${currentPage} 頁`;
+    }
+
+    // 添加點擊事件監聽器
+    document.getElementById('table-list_next').addEventListener('click', function(e) {
+      if (!this.classList.contains('disabled')) {
+        if (currentPage < totalPages) {
+          currentPage++;
+          updatePage();
+        }
+      }
+    });
+
+    document.getElementById('table-list_previous').addEventListener('click', function(e) {
+      if (!this.classList.contains('disabled')) {
+        if (currentPage > 1) {
+          currentPage--;
+          updatePage();
+        }
+      }
+    });
+
+    // 初始化
+    updatePage();
+
+    // 記錄擴充功能載入狀態
+    console.log('%c[Test Page] 測試頁面已載入', 'color: #667eea; font-weight: bold; font-size: 14px;');
+    console.log('%c請檢查是否看到 "[Anime Next] 鍵盤導航已啟用" 訊息', 'color: #764ba2; font-size: 12px;');
+  </script>
+</body>
+</html>

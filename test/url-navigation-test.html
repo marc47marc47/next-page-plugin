@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL 參數導航測試頁面</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #667eea;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #999;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.1em;
+    }
+
+    .page-info {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .page-number {
+      font-size: 5em;
+      font-weight: bold;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .page-label {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    .url-info {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .url-info h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .url-display {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      word-break: break-all;
+      font-family: 'Consolas', 'Monaco', monospace;
+      color: #555;
+      font-size: 0.9em;
+    }
+
+    .instructions {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .instructions h3 {
+      color: #856404;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instructions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .instructions li {
+      padding: 10px 0;
+      color: #856404;
+      line-height: 1.6;
+    }
+
+    .instructions li:before {
+      content: "👉 ";
+      margin-right: 8px;
+    }
+
+    .keyboard-shortcuts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .shortcut-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .shortcut-card:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .shortcut-key {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .shortcut-label {
+      color: #555;
+      font-weight: 600;
+    }
+
+    .manual-navigation {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .manual-navigation h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .nav-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .nav-button {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: white;
+    }
+
+    .nav-button.prev {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .nav-button.next {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .features {
+      background: #e7f3ff;
+      border: 2px solid #667eea;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .features h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .features ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .features li {
+      padding: 8px 0;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .features li:before {
+      content: "✓ ";
+      color: #4caf50;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+      color: #999;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 URL 參數導航測試</h1>
+    <p class="subtitle">測試 Anime Next 的 URL 參數導航功能</p>
+
+    <!-- 頁面資訊 -->
+    <div class="page-info">
+      <div class="page-number" id="page-number">1</div>
+      <div class="page-label">當前頁面</div>
+    </div>
+
+    <!-- URL 資訊 -->
+    <div class="url-info">
+      <h3>📍 當前 URL</h3>
+      <div class="url-display" id="url-display"></div>
+    </div>
+
+    <!-- 使用說明 -->
+    <div class="instructions">
+      <h3>📖 使用說明</h3>
+      <ul>
+        <li>這個頁面沒有實際的分頁按鈕</li>
+        <li>使用鍵盤左右方向鍵 (← →) 來測試 URL 參數導航</li>
+        <li>URL 中的 page 參數會自動變化</li>
+        <li>你也可以手動在 URL 中修改 page 參數（例如 ?page=5）</li>
+        <li>確保在擴充功能設定中啟用了「URL 參數導航」功能</li>
+      </ul>
+    </div>
+
+    <!-- 鍵盤快捷鍵 -->
+    <div class="keyboard-shortcuts">
+      <div class="shortcut-card">
+        <div class="shortcut-key">←</div>
+        <div class="shortcut-label">上一頁</div>
+      </div>
+      <div class="shortcut-card">
+        <div class="shortcut-key">→</div>
+        <div class="shortcut-label">下一頁</div>
+      </div>
+    </div>
+
+    <!-- 手動導航 -->
+    <div class="manual-navigation">
+      <h3>🔗 手動導航連結（用於測試）</h3>
+      <div class="nav-buttons">
+        <button class="nav-button prev" onclick="goToPage(currentPage - 1)" id="prev-btn">
+          ← 上一頁
+        </button>
+        <button class="nav-button next" onclick="goToPage(currentPage + 1)">
+          下一頁 →
+        </button>
+      </div>
+    </div>
+
+    <!-- 功能特色 -->
+    <div class="features">
+      <h3>✨ URL 參數導航功能特色</h3>
+      <ul>
+        <li>當頁面沒有實際的 next/prev 按鈕時自動啟用</li>
+        <li>支援自訂 URL 參數名稱（預設為 "page"）</li>
+        <li>可以在擴充功能設定中開關此功能</li>
+        <li>與現有的按鈕導航功能無縫整合</li>
+        <li>適用於各種使用 URL 參數分頁的網站</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      Anime Next - URL 參數導航測試頁面 v1.0.0
+    </div>
+  </div>
+
+  <script>
+    // 獲取當前頁碼
+    function getCurrentPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const page = urlParams.get('page');
+      return page ? parseInt(page, 10) : 1;
+    }
+
+    // 導航到指定頁面
+    function goToPage(pageNumber) {
+      if (pageNumber < 1) return;
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('page', pageNumber);
+      window.location.href = url.toString();
+    }
+
+    // 更新頁面顯示
+    function updateDisplay() {
+      currentPage = getCurrentPage();
+      document.getElementById('page-number').textContent = currentPage;
+      document.getElementById('url-display').textContent = window.location.href;
+
+      // 更新上一頁按鈕狀態
+      const prevBtn = document.getElementById('prev-btn');
+      if (currentPage <= 1) {
+        prevBtn.disabled = true;
+      } else {
+        prevBtn.disabled = false;
+      }
+    }
+
+    // 當前頁碼（全局變數）
+    let currentPage = getCurrentPage();
+
+    // 初始化
+    updateDisplay();
+
+    // 監聽瀏覽器前進/後退
+    window.addEventListener('popstate', updateDisplay);
+  </script>
+</body>
+</html>
