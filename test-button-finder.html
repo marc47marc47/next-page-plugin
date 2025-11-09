@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>按鈕查找功能測試</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .test-section {
+      margin: 30px 0;
+      padding: 20px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    .test-section h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    button, a.button {
+      margin: 10px 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid #007bff;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 5px;
+    }
+    button:hover, a.button:hover {
+      background-color: #0056b3;
+    }
+    .disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: #ccc;
+      border-color: #ccc;
+    }
+    .info {
+      background-color: #e3f2fd;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+    .success {
+      background-color: #c8e6c9;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>按鈕查找功能測試頁面</h1>
+
+  <div class="info">
+    <strong>測試說明：</strong>
+    <p>按下鍵盤 <strong>右鍵 (→)</strong> 應該能觸發下一頁按鈕</p>
+    <p>按下鍵盤 <strong>左鍵 (←)</strong> 應該能觸發上一頁按鈕</p>
+    <p>當按鈕被點擊時，會顯示綠色成功訊息</p>
+  </div>
+
+  <div id="result-area"></div>
+
+  <!-- 測試 1: 中文文字按鈕 -->
+  <div class="test-section">
+    <h3>測試 1: 中文文字按鈕</h3>
+    <button onclick="testClick('上一頁按鈕被點擊')">上一頁</button>
+    <button onclick="testClick('下一頁按鈕被點擊')">下一頁</button>
+  </div>
+
+  <!-- 測試 2: 英文文字按鈕 -->
+  <div class="test-section">
+    <h3>測試 2: 英文文字按鈕</h3>
+    <button onclick="testClick('Previous 按鈕被點擊')">Previous</button>
+    <button onclick="testClick('Next 按鈕被點擊')">Next</button>
+  </div>
+
+  <!-- 測試 3: JavaScript 連結 -->
+  <div class="test-section">
+    <h3>測試 3: JavaScript 連結 (nextPage / prevPage)</h3>
+    <a href="javascript:prevPage();" class="button">上一頁 (prevPage)</a>
+    <a href="javascript:nextPage();" class="button">下一頁 (nextPage)</a>
+  </div>
+
+  <!-- 測試 4: onclick 屬性 -->
+  <div class="test-section">
+    <h3>測試 4: onclick 屬性</h3>
+    <a href="#" onclick="goPrev(); return false;" class="button">← Previous</a>
+    <a href="#" onclick="goNext(); return false;" class="button">Next →</a>
+  </div>
+
+  <!-- 測試 5: 符號按鈕 -->
+  <div class="test-section">
+    <h3>測試 5: 符號按鈕</h3>
+    <button onclick="testClick('← 按鈕被點擊')">←</button>
+    <button onclick="testClick('→ 按鈕被點擊')">→</button>
+    <button onclick="testClick('‹ 按鈕被點擊')">‹</button>
+    <button onclick="testClick('› 按鈕被點擊')">›</button>
+  </div>
+
+  <!-- 測試 6: 繁體/簡體混合 -->
+  <div class="test-section">
+    <h3>測試 6: 繁體/簡體中文</h3>
+    <button onclick="testClick('上一页按鈕被點擊 (簡體)')">上一页</button>
+    <button onclick="testClick('下一页按鈕被點擊 (簡體)')">下一页</button>
+    <button onclick="testClick('上頁按鈕被點擊 (簡稱)')">上頁</button>
+    <button onclick="testClick('下頁按鈕被點擊 (簡稱)')">下頁</button>
+  </div>
+
+  <!-- 測試 7: ID/Class 命名 -->
+  <div class="test-section">
+    <h3>測試 7: ID/Class 命名</h3>
+    <button id="prevPage" onclick="testClick('prevPage ID 按鈕被點擊')">Previous Chapter</button>
+    <button id="nextPage" onclick="testClick('nextPage ID 按鈕被點擊')">Next Chapter</button>
+  </div>
+
+  <!-- 測試 8: aria-label -->
+  <div class="test-section">
+    <h3>測試 8: ARIA Label</h3>
+    <button aria-label="上一頁" onclick="testClick('ARIA 上一頁被點擊')">⬅</button>
+    <button aria-label="下一頁" onclick="testClick('ARIA 下一頁被點擊')">➡</button>
+  </div>
+
+  <!-- 測試 9: title 屬性 -->
+  <div class="test-section">
+    <h3>測試 9: Title 屬性</h3>
+    <button title="Previous Page" onclick="testClick('Title Previous 被點擊')">Prev</button>
+    <button title="Next Page" onclick="testClick('Title Next 被點擊')">Next</button>
+  </div>
+
+  <!-- 測試 10: 日文/韓文 -->
+  <div class="test-section">
+    <h3>測試 10: 日文/韓文</h3>
+    <button onclick="testClick('日文 前へ 被點擊')">前へ</button>
+    <button onclick="testClick('日文 次へ 被點擊')">次へ</button>
+    <button onclick="testClick('韓文 이전 被點擊')">이전</button>
+    <button onclick="testClick('韓文 다음 被點擊')">다음</button>
+  </div>
+
+  <script>
+    // 計數器用於追蹤頁面
+    let currentPage = 1;
+
+    // 模擬頁面導航函數
+    function nextPage() {
+      currentPage++;
+      testClick(`nextPage() 函數被調用 - 模擬跳轉到第 ${currentPage} 頁`);
+      console.log('[Test] nextPage() called, now on page', currentPage);
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+      }
+      testClick(`prevPage() 函數被調用 - 模擬跳轉到第 ${currentPage} 頁`);
+      console.log('[Test] prevPage() called, now on page', currentPage);
+    }
+
+    function goNext() {
+      currentPage++;
+      testClick(`goNext() 函數被調用 - 模擬跳轉到第 ${currentPage} 頁`);
+      console.log('[Test] goNext() called, now on page', currentPage);
+    }
+
+    function goPrev() {
+      if (currentPage > 1) {
+        currentPage--;
+      }
+      testClick(`goPrev() 函數被調用 - 模擬跳轉到第 ${currentPage} 頁`);
+      console.log('[Test] goPrev() called, now on page', currentPage);
+    }
+
+    function testClick(message) {
+      const resultArea = document.getElementById('result-area');
+      const resultDiv = document.createElement('div');
+      resultDiv.className = 'success';
+      resultDiv.innerHTML = `✓ <strong>${message}</strong> - ${new Date().toLocaleTimeString()}`;
+
+      // 插入到最前面
+      if (resultArea.firstChild) {
+        resultArea.insertBefore(resultDiv, resultArea.firstChild);
+      } else {
+        resultArea.appendChild(resultDiv);
+      }
+
+      // 5秒後淡出移除
+      setTimeout(() => {
+        resultDiv.style.transition = 'opacity 0.5s';
+        resultDiv.style.opacity = '0';
+        setTimeout(() => resultDiv.remove(), 500);
+      }, 5000);
+
+      console.log('[Test]', message);
+    }
+
+    // 監聽鍵盤事件（用於顯示哪個按鈕被觸發）
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') {
+        console.log('[Test] 使用者按下左鍵 ←');
+      } else if (e.key === 'ArrowRight') {
+        console.log('[Test] 使用者按下右鍵 →');
+      }
+    });
+
+    // 顯示當前頁碼
+    setInterval(() => {
+      document.title = `按鈕查找測試 - 第 ${currentPage} 頁`;
+    }, 1000);
+
+    console.log('[Test] 測試頁面已載入，請按下鍵盤方向鍵測試');
+    console.log('[Test] 當前頁碼:', currentPage);
+  </script>
+</body>
+</html>

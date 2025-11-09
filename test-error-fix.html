@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error 對象測試</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .test-result {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <h1>Error 對象測試頁面</h1>
+  <p>這個頁面用於測試 anti-devtools-detection.js 的 Error Proxy 是否正常工作。</p>
+
+  <div id="results"></div>
+
+  <script>
+    const results = document.getElementById('results');
+
+    function addResult(message, isSuccess) {
+      const div = document.createElement('div');
+      div.className = `test-result ${isSuccess ? 'success' : 'error'}`;
+      div.textContent = (isSuccess ? '✓ ' : '✗ ') + message;
+      results.appendChild(div);
+    }
+
+    // 測試 1: 創建基本 Error
+    try {
+      const err = new Error('測試錯誤');
+      if (err.message === '測試錯誤') {
+        addResult('測試 1: 創建基本 Error - 成功', true);
+      } else {
+        addResult('測試 1: 創建基本 Error - 失敗', false);
+      }
+    } catch (e) {
+      addResult('測試 1: 創建基本 Error - 拋出異常: ' + e.message, false);
+    }
+
+    // 測試 2: Error.captureStackTrace
+    try {
+      if (typeof Error.captureStackTrace === 'function') {
+        const obj = {};
+        Error.captureStackTrace(obj);
+        addResult('測試 2: Error.captureStackTrace - 存在且可用', true);
+      } else {
+        addResult('測試 2: Error.captureStackTrace - 不存在（某些瀏覽器正常）', true);
+      }
+    } catch (e) {
+      addResult('測試 2: Error.captureStackTrace - 異常: ' + e.message, false);
+    }
+
+    // 測試 3: Error.stackTraceLimit
+    try {
+      const limit = Error.stackTraceLimit;
+      addResult('測試 3: Error.stackTraceLimit - 值為 ' + limit, true);
+    } catch (e) {
+      addResult('測試 3: Error.stackTraceLimit - 異常: ' + e.message, false);
+    }
+
+    // 測試 4: Stack trace 清理
+    try {
+      const err = new Error('測試 stack trace');
+      const stack = err.stack;
+
+      if (stack && !stack.includes('chrome-extension://')) {
+        addResult('測試 4: Stack trace 清理 - 成功（沒有 chrome-extension）', true);
+      } else if (stack && stack.includes('chrome-extension://')) {
+        addResult('測試 4: Stack trace 清理 - 失敗（還包含 chrome-extension）', false);
+      } else {
+        addResult('測試 4: Stack trace 清理 - Stack trace 不存在', true);
+      }
+    } catch (e) {
+      addResult('測試 4: Stack trace 清理 - 異常: ' + e.message, false);
+    }
+
+    // 測試 5: Error 子類
+    try {
+      const err = new TypeError('類型錯誤');
+      if (err instanceof TypeError && err instanceof Error) {
+        addResult('測試 5: Error 子類 (TypeError) - 成功', true);
+      } else {
+        addResult('測試 5: Error 子類 (TypeError) - 失敗', false);
+      }
+    } catch (e) {
+      addResult('測試 5: Error 子類 (TypeError) - 異常: ' + e.message, false);
+    }
+
+    // 測試 6: 拋出並捕獲 Error
+    try {
+      throw new Error('拋出測試');
+    } catch (e) {
+      if (e.message === '拋出測試') {
+        addResult('測試 6: 拋出並捕獲 Error - 成功', true);
+      } else {
+        addResult('測試 6: 拋出並捕獲 Error - 失敗', false);
+      }
+    }
+
+    // 測試 7: 檢查循環引用
+    try {
+      const err1 = new Error('test1');
+      const err2 = new Error('test2');
+      // 如果沒有拋出異常，說明沒有循環引用問題
+      addResult('測試 7: 檢查循環引用 - 沒有循環引用錯誤', true);
+    } catch (e) {
+      if (e.message.includes('Cyclic')) {
+        addResult('測試 7: 檢查循環引用 - 發現循環引用！', false);
+      } else {
+        addResult('測試 7: 檢查循環引用 - 其他錯誤: ' + e.message, false);
+      }
+    }
+
+    console.log('所有 Error 測試完成');
+  </script>
+</body>
+</html>

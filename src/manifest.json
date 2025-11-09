@@ -16,12 +16,19 @@
       "matches": ["<all_urls>"],
       "js": ["content.js"],
       "css": ["styles/content.css"],
-      "run_at": "document_idle"
+      "run_at": "document_start",
+      "all_frames": true
     }
   ],
   "icons": {
     "16": "icons/next-prev.ico",
     "48": "icons/next-prev.ico",
     "128": "icons/next-prev.ico"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["anti-debugger.js", "anti-devtools-detection.js", "page-script-executor.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

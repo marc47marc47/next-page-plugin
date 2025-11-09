@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevTools Detection Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .test {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .test h3 {
+      margin-top: 0;
+    }
+    .status {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+    .detected {
+      background-color: #ffcccc;
+      color: #cc0000;
+    }
+    .not-detected {
+      background-color: #ccffcc;
+      color: #00cc00;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>DevTools 偵測測試頁面</h1>
+  <p>這個頁面會測試各種常見的 DevTools 偵測技術。如果你的擴充功能運作正常，所有測試都應該顯示「未偵測到」。</p>
+
+  <div id="test-results"></div>
+
+  <button onclick="runAllTests()">重新執行所有測試</button>
+
+  <script>
+    const tests = [];
+
+    // 測試 1: 視窗大小檢測
+    tests.push({
+      name: '視窗大小檢測',
+      description: '檢查 window.outerWidth/Height 與 innerWidth/Height 的差異',
+      test: function() {
+        const threshold = 160; // DevTools 通常會造成 160+ 像素差異
+        const widthDiff = window.outerWidth - window.innerWidth;
+        const heightDiff = window.outerHeight - window.innerHeight;
+
+        // 正常情況下差異不應該太大
+        return widthDiff < threshold && heightDiff < threshold;
+      }
+    });
+
+    // 測試 2: Console Log Timing
+    tests.push({
+      name: 'Console Timing 檢測',
+      description: '測量 console.log 執行時間（DevTools 開啟時會變慢）',
+      test: function() {
+        const start = performance.now();
+        for (let i = 0; i < 100; i++) {
+          console.log('test');
+        }
+        const end = performance.now();
+        const duration = end - start;
+
+        // 如果 DevTools 開啟，執行時間通常 > 10ms
+        return duration < 10;
+      }
+    });
+
+    // 測試 3: toString 檢測
+    tests.push({
+      name: 'toString 檢測',
+      description: '檢查物件的 toString 是否被 DevTools 調用',
+      test: function() {
+        let toStringCalled = false;
+        const obj = {
+          toString: function() {
+            toStringCalled = true;
+            return 'test';
+          }
+        };
+
+        console.log(obj);
+
+        // 如果 DevTools 開啟，toString 通常會被自動調用
+        // 但我們的腳本應該阻止這個行為
+        return !toStringCalled;
+      }
+    });
+
+    // 測試 4: Debugger 語句
+    tests.push({
+      name: 'Debugger 語句測試',
+      description: '執行 debugger 語句應該不會暫停',
+      test: function() {
+        let passed = true;
+        try {
+          const testFunc = new Function('debugger');
+          const start = Date.now();
+          testFunc();
+          const end = Date.now();
+
+          // 如果被 debugger 暫停，執行時間會很長
+          if (end - start > 100) {
+            passed = false;
+          }
+        } catch (e) {
+          // 如果拋出錯誤，也算通過（debugger 被移除）
+          passed = true;
+        }
+        return passed;
+      }
+    });
+
+    // 測試 5: Firebug 變數檢測
+    tests.push({
+      name: 'Firebug/DevTools 變數',
+      description: '檢查是否存在 Firebug 或其他 DevTools 變數',
+      test: function() {
+        return typeof window.Firebug === 'undefined' &&
+               typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' &&
+               typeof window.__VUE_DEVTOOLS_GLOBAL_HOOK__ === 'undefined';
+      }
+    });
+
+    // 測試 6: RegExp toString
+    tests.push({
+      name: 'RegExp toString 檢測',
+      description: '檢查正則表達式的 toString 是否正常',
+      test: function() {
+        const regex = /debugger/;
+        const str = regex.toString();
+        // 我們的腳本會將 debugger regex 替換掉
+        return str !== '/debugger/';
+      }
+    });
+
+    // 測試 7: Performance API
+    tests.push({
+      name: 'Performance API 穩定性',
+      description: '檢查 performance.now() 是否返回穩定的時間',
+      test: function() {
+        const measurements = [];
+        for (let i = 0; i < 10; i++) {
+          const start = performance.now();
+          // 空迴圈
+          for (let j = 0; j < 1000; j++) {}
+          const end = performance.now();
+          measurements.push(end - start);
+        }
+
+        // 檢查測量值是否穩定（標準差小）
+        const avg = measurements.reduce((a, b) => a + b) / measurements.length;
+        const variance = measurements.reduce((sum, val) => sum + Math.pow(val - avg, 2), 0) / measurements.length;
+        const stdDev = Math.sqrt(variance);
+
+        // 標準差應該小（表示時間測量穩定）
+        return stdDev < 5;
+      }
+    });
+
+    // 測試 8: Date 對象檢測
+    tests.push({
+      name: 'Date 對象穩定性',
+      description: '檢查 Date.now() 是否正常',
+      test: function() {
+        const now1 = Date.now();
+        const now2 = new Date().getTime();
+        const diff = Math.abs(now1 - now2);
+
+        // 兩個時間戳應該非常接近
+        return diff < 1000;
+      }
+    });
+
+    function runAllTests() {
+      const resultsContainer = document.getElementById('test-results');
+      resultsContainer.innerHTML = '';
+
+      let passedCount = 0;
+      let failedCount = 0;
+
+      tests.forEach(testCase => {
+        let passed = false;
+        let error = null;
+
+        try {
+          passed = testCase.test();
+        } catch (e) {
+          error = e.message;
+        }
+
+        if (passed) {
+          passedCount++;
+        } else {
+          failedCount++;
+        }
+
+        const testDiv = document.createElement('div');
+        testDiv.className = 'test';
+        testDiv.innerHTML = `
+          <h3>${testCase.name}</h3>
+          <p>${testCase.description}</p>
+          <div class="status ${passed ? 'not-detected' : 'detected'}">
+            ${passed ? '✓ 未偵測到 DevTools' : '✗ 偵測到 DevTools'}
+          </div>
+          ${error ? `<p style="color: red;">錯誤: ${error}</p>` : ''}
+        `;
+
+        resultsContainer.appendChild(testDiv);
+      });
+
+      // 添加總結
+      const summaryDiv = document.createElement('div');
+      summaryDiv.className = 'test';
+      summaryDiv.innerHTML = `
+        <h3>測試總結</h3>
+        <p>通過: ${passedCount} / ${tests.length}</p>
+        <p>失敗: ${failedCount} / ${tests.length}</p>
+        <div class="status ${failedCount === 0 ? 'not-detected' : 'detected'}">
+          ${failedCount === 0 ? '✓ 所有防護措施都運作正常！' : '⚠ 部分測試失敗，可能需要進一步調整'}
+        </div>
+      `;
+
+      resultsContainer.insertBefore(summaryDiv, resultsContainer.firstChild);
+    }
+
+    // 頁面載入後自動執行測試
+    window.addEventListener('load', function() {
+      console.log('頁面已載入，準備執行測試...');
+      setTimeout(runAllTests, 500);
+    });
+
+    // 每 5 秒自動重新測試
+    setInterval(runAllTests, 5000);
+  </script>
+</body>
+</html>

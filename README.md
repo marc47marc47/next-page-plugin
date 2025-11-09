@@ -32,24 +32,32 @@
 
 ### 🌐 多語言支援 Multi-Language Support
 
-支援以下語言的「載入更多」按鈕檢測：
-- 🇬🇧 英文：Load More, Show More, View More
-- 🇨🇳 繁體中文：載入更多、查看更多、顯示更多
-- 🇨🇳 簡體中文：加载更多、查看更多、显示更多
-- 🇯🇵 日文：もっと見る、さらに表示
-- 🇰🇷 韓文：더 보기、더보기
-- 🇪🇸 西班牙文：Cargar más、Ver más
-- 🇫🇷 法文：Charger plus、Voir plus
-- 🇩🇪 德文：Mehr laden、Mehr anzeigen
+**按鈕文字識別：**
+- 🇬🇧 英文：Next Page, Previous Page, Load More
+- 🇨🇳 繁體中文：下一頁、上一頁、載入更多
+- 🇨🇳 簡體中文：下一页、上一页、加载更多
+- 🇯🇵 日文：次へ、前へ、もっと見る
+- 🇰🇷 韓文：다음、이전、더 보기
+- 🇪🇸 西班牙文：Siguiente、Anterior、Ver más
+- 🇫🇷 法文：Suivant、Précédent、Voir plus
+- 🇩🇪 德文：Weiter、Zurück、Mehr laden
+
+**JavaScript 函數支援：**
+- `javascript:nextPage()` / `javascript:prevPage()`
+- `onclick="goNext()"` / `onclick="goPrev()"`
+- 以及更多常見的分頁函數名稱
 
 ### ⚙️ 進階功能 Advanced Features
 
-- ✅ 視覺回饋動畫效果
-- ✅ 自訂按鈕 ID 支援
-- ✅ 設定同步至所有分頁
-- ✅ 完整的測試頁面
-- ✅ 效能優化（按鈕快取、DOM 監控）
-- ✅ 詳細的日誌記錄
+- ✅ **智能按鈕識別** - 通過文字、ID、Class、JavaScript 連結多重匹配
+- ✅ **CSP 繞過技術** - 使用 CustomEvent 通訊機制執行頁面 JavaScript
+- ✅ **反除錯保護** - 自動繞過網站的 DevTools 偵測和 debugger 陷阱
+- ✅ **優先級排序** - 智能區分"頁面"和"章節"導航按鈕
+- ✅ **視覺回饋動畫** - 可選的按鈕點擊效果
+- ✅ **自訂按鈕 ID** - 支援添加網站特定的按鈕識別
+- ✅ **設定同步** - 所有分頁共享設定
+- ✅ **效能優化** - 按鈕快取、DOM 變更監控
+- ✅ **完整測試套件** - 包含多個測試頁面
 
 ---
 
@@ -216,6 +224,7 @@ pagination-prev
 | 文件 | 說明 |
 |-----|------|
 | [DEVELOP.md](DEVELOP.md) | 完整開發文件（1500+ 行） |
+| [README-CSP-SOLUTION.md](README-CSP-SOLUTION.md) | CSP 繞過解決方案技術文檔 ⭐ NEW |
 | [URL-NAVIGATION-GUIDE.md](URL-NAVIGATION-GUIDE.md) | URL 參數導航指南 |
 | [HREF-SCAN-GUIDE.md](HREF-SCAN-GUIDE.md) | 連結掃描指南 |
 | [LOAD-MORE-GUIDE.md](LOAD-MORE-GUIDE.md) | Load More 檢測指南 |
@@ -247,18 +256,61 @@ pagination-prev
      ▼           ▼           ▼           ▼
 ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
 │ Layer 1 │ │ Layer 2 │ │ Layer 3 │ │ Layer 4 │
-│ Button  │ │   URL   │ │  Href   │ │  Load   │
-│ Detect  │ │  Param  │ │  Scan   │ │  More   │
+│ Smart   │ │   URL   │ │  Href   │ │  Load   │
+│ Button  │ │  Param  │ │  Scan   │ │  More   │
+│ Detect  │ │ (CSP)   │ │         │ │         │
 └─────────┘ └─────────┘ └─────────┘ └─────────┘
+     │
+     ▼
+┌──────────────────────────────────────────┐
+│   Smart Click Handler (smartClick)       │
+│  ┌────────────────────────────────────┐  │
+│  │ 1. onclick 屬性執行                │  │
+│  │ 2. javascript: 連結 (CustomEvent)  │  │
+│  │ 3. 普通連結導航                    │  │
+│  │ 4. MouseEvent 派發                 │  │
+│  └────────────────────────────────────┘  │
+└──────────────────────────────────────────┘
+     │
+     ▼
+┌──────────────────────────────────────────┐
+│     Page Script Executor (CSP Bypass)    │
+│  ┌────────────────────────────────────┐  │
+│  │ Content Script → CustomEvent       │  │
+│  │       ↓                            │  │
+│  │ Page Context → Execute Function    │  │
+│  │       ↓                            │  │
+│  │ CustomEvent ← Return Result        │  │
+│  └────────────────────────────────────┘  │
+└──────────────────────────────────────────┘
 ```
 
 ### 核心技術 Core Technologies
 
 - **Manifest V3** - Chrome 擴充功能最新版本
 - **Vanilla JavaScript** - 無外部相依套件
+- **CustomEvent API** - 跨上下文通訊（CSP 繞過）
+- **Proxy Pattern** - Error 和 Function 攔截
 - **Chrome Storage API** - 設定同步
 - **MutationObserver** - DOM 變更監控
 - **CSS Animations** - 視覺回饋效果
+
+### 關鍵技術特點
+
+1. **CSP 繞過機制**
+   - 使用 CustomEvent 在 Content Script 和 Page Context 之間通訊
+   - 避免直接使用 `eval()` 或 `new Function()`
+   - 詳見 [README-CSP-SOLUTION.md](README-CSP-SOLUTION.md)
+
+2. **智能按鈕識別**
+   - 多重匹配策略：ID → Class → Data 屬性 → 文字內容 → JavaScript 連結
+   - 優先級排序：優先匹配"頁面"而非"章節"
+   - 排除機制：自動過濾不相關的按鈕
+
+3. **反除錯保護**
+   - Function Proxy：攔截並移除 `debugger` 語句
+   - DevTools 偵測繞過：隱藏視窗大小差異、Firebug 變數等
+   - Error Stack 清理：移除擴充功能痕跡
 
 ---
 
@@ -336,7 +388,30 @@ pagination-prev
 
 ## 📝 版本歷史 Version History
 
-### v1.0.0 (Current)
+### v2.0.0 (Current)
+
+**🎯 智能按鈕識別系統**
+- ✨ 新增智能文字匹配：支援「下一頁」、「Next Page」等多語言按鈕
+- ✨ JavaScript 連結支援：可執行 `javascript:nextPage()` 類型的連結
+- ✨ 優先級排序：自動區分「上一頁」vs「上一章」，選擇正確按鈕
+- ✨ 多重匹配策略：文字、ID、Class、onclick、href 全方位搜尋
+
+**🔒 反除錯與安全**
+- 🛡️ CSP 繞過技術：使用 CustomEvent 通訊機制執行頁面 JavaScript
+- 🛡️ 反 DevTools 偵測：自動繞過網站的開發者工具檢測
+- 🛡️ 反 debugger 陷阱：移除所有 debugger 語句，防止強制暫停
+- 🛡️ 修復 Error Proxy：解決循環引用問題，確保正常運作
+
+**⚡ 效能與體驗**
+- 🎨 減少 Debug 訊息：清理過多的 console.log，保持 Console 清爽
+- ⚡ 頁面腳本執行器：智能載入並快取，提升執行效率
+- 📚 完整技術文檔：新增 CSP 解決方案說明文件
+
+**🧪 測試與文檔**
+- 📄 新增測試頁面：按鈕查找測試、Error 修正測試
+- 📚 技術文檔：README-CSP-SOLUTION.md 詳細說明實現原理
+
+### v1.0.0
 
 - ✨ 四層智能導航系統
 - 🌐 多語言 Load More 支援（7+ 語言）
